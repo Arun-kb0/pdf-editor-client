@@ -19,6 +19,15 @@ const PdfViewer = ({ file }: Props) => {
   const [numPages, setNumPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(false)
+  const [pageWidth, setPageWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPageWidth(window.innerWidth < 786 ? 300 : 600)
+    }
+    window.addEventListener('resize', handleResize)
+    return ()=> window.removeEventListener('resize',handleResize)
+  }, [window.innerWidth])
 
   useEffect(() => {
     let cancelled = false
