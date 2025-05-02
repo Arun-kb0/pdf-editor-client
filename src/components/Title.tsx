@@ -10,7 +10,7 @@ const Title = ({ title }: Props) => {
   return (
     <section className=''>
 
-      <div className="flex items-center justify-center py-4">
+      <div className="flex items-center justify-center pb-2 pt-20 ">
         <h1 className="capitalize text-white text-2xl md:text-3xl pl-2 my-2 border-l-4  font-sans font-bold border-teal-400  dark:text-gray-200">
           {title}
         </h1>

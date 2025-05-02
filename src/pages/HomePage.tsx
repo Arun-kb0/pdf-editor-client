@@ -4,9 +4,9 @@ type Props = {}
 
 const HomePage = (props: Props) => {
   return (
-    <main className="bg-black h-screen">
+    <main >
       <Title title="select saved pdf's" />
-      
+
     </main>
   )
 }

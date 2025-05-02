@@ -1,10 +1,12 @@
-import React from 'react'
+import Title from '../components/Title'
 
-type Props = {}
 
-const UploadPage = (props: Props) => {
+const UploadPage = () => {
   return (
-    <div>UploadPage</div>
+    <main>
+      <Title title="Upload pdf" />
+
+    </main>
   )
 }
 
