@@ -4,6 +4,7 @@ import ContentsPage from "./pages/ContentsPage"
 import UploadPage from "./pages/UploadPage"
 import NavigationBar from "./components/basic/NavigationBar"
 
+
 const App = () => {
   return (
     <main className="bg-black h-screen">
