@@ -3,12 +3,13 @@ import HomePage from "./pages/HomePage"
 import ContentsPage from "./pages/ContentsPage"
 import UploadPage from "./pages/UploadPage"
 import NavigationBar from "./components/basic/NavigationBar"
-
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
-    <main className="bg-black h-screen">
-
+    <main className="bg-black min-h-screen min-w-screen">
+      <ToastContainer theme="dark"/>
       <NavigationBar />
 
       <Routes>

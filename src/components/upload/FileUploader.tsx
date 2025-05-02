@@ -16,9 +16,7 @@ const FileUploader = () => {
 
   const handleFormSubmit = (data: FormValues) => {
     const file = data.fileList?.[0]
-    console.log('File:', file)
-    localStorage.setItem('pdfFile', JSON.stringify(file))
-    navigation('/contents')
+    navigation('/contents', { state: { file } })
   }
 
   return (
