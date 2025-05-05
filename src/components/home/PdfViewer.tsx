@@ -8,6 +8,7 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/solid'
 import { axiosInstance } from '../../config/axiosInstance'
 import { PdfFileDetailsType } from '../../constants/types'
+import { renderToString } from 'react-dom/server'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`
 
@@ -59,7 +60,6 @@ const PdfViewer = ({ file, pdfDetails }: Props) => {
 
         if (cancelled) return
         setPdfDoc(loadedDoc);
-        // setPdfBytes(savedBytes.buffer);
         setPdfBytes(savedBytes);
         setNumPages(loadedDoc.getPageCount());
         setCurrentPage(1);
@@ -103,34 +103,26 @@ const PdfViewer = ({ file, pdfDetails }: Props) => {
 
   const handleSave = useCallback(async () => {
     try {
-      console.log('pdfBytes:', pdfBytes);
-      console.log('Byte length:', pdfBytes?.byteLength);
       if (!pdfDoc) {
         console.log('No pdfDoc data to upload.')
         return
       }
-      if (pdfDetails) {
-        console.log('update pdf doc call')
-        // !  save edited here
-        return
-      }
       const formData = new FormData()
-      // formData.append('pdf', file, file.name)
       const updatedBytes = await pdfDoc.save()
       const blob = new Blob([updatedBytes], { type: 'application/pdf' })
-      console.log('Blob size:', blob.size);
       formData.append('pdf', blob, file.name)
+      if (pdfDetails) {
+        console.log('update pdf file call')
+        const res = await axiosInstance.patch(`/${pdfDetails._id}`, formData, {})
+        console.log(res)
+        return
+      }
       const res = await axiosInstance.post('/', formData, {})
       console.log(res)
     } catch (error) {
       console.log(error)
     }
   }, [pdfBytes, file, axiosInstance])
-
-  useEffect(() => {
-    console.log('pdfBytes length useEffect = ', pdfBytes?.length)
-    console.log('pdfDc length useEffect = ', pdfDoc)
-  }, [pdfBytes, pdfDoc])
 
   return (
     <section className='flex flex-col items-center space-y-4'>

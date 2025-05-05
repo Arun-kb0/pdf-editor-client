@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { CloudArrowUpIcon } from '@heroicons/react/24/solid'
-import { axiosInstance } from '../../config/axiosInstance'
 
 type FormValues = {
   fileList: FileList;
@@ -20,7 +19,7 @@ const FileUploader = () => {
 
   const handleFormSubmit = async (data: FormValues) => {
     const file = data.fileList?.[0]
-    navigation('/contents', { state: { file } })
+    navigation('/contents', { state: { file, isDbStored: false } })
   }
 
   return (

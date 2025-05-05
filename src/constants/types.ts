@@ -1,4 +1,5 @@
 export type PdfFileType = {
+  _id: string
   name: string
   file: {
     data: Buffer
