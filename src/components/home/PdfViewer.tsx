@@ -1,4 +1,4 @@
-import { PDFDocument } from 'pdf-lib'
+import { PDFDocument, PDFField } from 'pdf-lib'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button, IconButton } from '@material-tailwind/react'
@@ -6,16 +6,20 @@ import { toast } from 'react-toastify'
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/solid'
+import { axiosInstance } from '../../config/axiosInstance'
+import { PdfFileDetailsType } from '../../constants/types'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`
 
 type Props = {
   file: File
+  pdfDetails: PdfFileDetailsType | undefined
 }
 
-const PdfViewer = ({ file }: Props) => {
+const PdfViewer = ({ file, pdfDetails }: Props) => {
   const [pdfDoc, setPdfDoc] = useState<PDFDocument | null>(null)
-  const [pdfBytes, setPdfBytes] = useState<ArrayBuffer | null>(null)
+  // const [pdfBytes, setPdfBytes] = useState<ArrayBuffer | null>(null)
+  const [pdfBytes, setPdfBytes] = useState<Uint8Array | null>(null)
   const [numPages, setNumPages] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -26,7 +30,7 @@ const PdfViewer = ({ file }: Props) => {
       setPageWidth(window.innerWidth < 786 ? 300 : 600)
     }
     window.addEventListener('resize', handleResize)
-    return ()=> window.removeEventListener('resize',handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [window.innerWidth])
 
   useEffect(() => {
@@ -55,7 +59,8 @@ const PdfViewer = ({ file }: Props) => {
 
         if (cancelled) return
         setPdfDoc(loadedDoc);
-        setPdfBytes(savedBytes.buffer);
+        // setPdfBytes(savedBytes.buffer);
+        setPdfBytes(savedBytes);
         setNumPages(loadedDoc.getPageCount());
         setCurrentPage(1);
       } catch (err) {
@@ -76,6 +81,8 @@ const PdfViewer = ({ file }: Props) => {
     try {
       pdfDoc.removePage(idx)
       const newBytes = await pdfDoc.save()
+      console.log('handleRemove')
+      console.log('after remove pdfDoc.save() ', newBytes.byteLength)
       setPdfBytes(newBytes)
       const updatedCount = pdfDoc.getPageCount()
       setNumPages(updatedCount)
@@ -95,8 +102,35 @@ const PdfViewer = ({ file }: Props) => {
   const goNext = () => { setCurrentPage(prev => Math.min(numPages, prev + 1)) }
 
   const handleSave = useCallback(async () => {
-    // ! send back end request here
-  }, [])
+    try {
+      console.log('pdfBytes:', pdfBytes);
+      console.log('Byte length:', pdfBytes?.byteLength);
+      if (!pdfDoc) {
+        console.log('No pdfDoc data to upload.')
+        return
+      }
+      if (pdfDetails) {
+        console.log('update pdf doc call')
+        // !  save edited here
+        return
+      }
+      const formData = new FormData()
+      // formData.append('pdf', file, file.name)
+      const updatedBytes = await pdfDoc.save()
+      const blob = new Blob([updatedBytes], { type: 'application/pdf' })
+      console.log('Blob size:', blob.size);
+      formData.append('pdf', blob, file.name)
+      const res = await axiosInstance.post('/', formData, {})
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }, [pdfBytes, file, axiosInstance])
+
+  useEffect(() => {
+    console.log('pdfBytes length useEffect = ', pdfBytes?.length)
+    console.log('pdfDc length useEffect = ', pdfDoc)
+  }, [pdfBytes, pdfDoc])
 
   return (
     <section className='flex flex-col items-center space-y-4'>

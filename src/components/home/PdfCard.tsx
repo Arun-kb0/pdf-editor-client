@@ -1,8 +1,9 @@
 import { DocumentIcon } from '@heroicons/react/24/solid'
 import { useNavigate } from 'react-router'
+import { PdfFileType } from '../../constants/types'
 
 type Props = {
-  file: File | undefined
+  file: PdfFileType
 }
 
 const PdfCard = ({ file }: Props) => {
@@ -10,7 +11,7 @@ const PdfCard = ({ file }: Props) => {
 
   const handleNavigation = () => {
     navigation('/contents', {
-      state: { file }
+      state: { file, isDbStored: true }
     })
   }
 
@@ -21,8 +22,7 @@ const PdfCard = ({ file }: Props) => {
       </div>
       <div className="p-6 text-center">
         <h4 className="mb-1 text-xl font-semibold text-white">
-          file name
-          {/* {file.name} */}
+          {file.name}
         </h4>
       </div>
     </button>
