@@ -20,7 +20,7 @@ const PdfCard = ({ file }: Props) => {
   }
 
   const handleDelete = async () => {
-    const res = await axiosInstance.delete(`/${file._id}`)
+    await axiosInstance.delete(`/${file._id}`)
     dispatch({ type: 'DELETE', payload: { pdfFileId: file._id } })
   }
 

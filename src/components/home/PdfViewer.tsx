@@ -24,7 +24,7 @@ const PdfViewer = ({ file, pdfDetails }: Props) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [_, setPageWidth] = useState(window.innerWidth)
-  const { state, dispatch } = usePdfFiles()
+  const { dispatch } = usePdfFiles()
 
   useEffect(() => {
     const handleResize = () => {
