@@ -1,10 +1,13 @@
-import React from 'react'
+import Title from "../components/Title"
 
 type Props = {}
 
 const HomePage = (props: Props) => {
   return (
-    <div>HomePage</div>
+    <main >
+      <Title title="select saved pdf's" />
+
+    </main>
   )
 }
 

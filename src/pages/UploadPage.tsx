@@ -1,10 +1,14 @@
-import React from 'react'
+import Title from '../components/Title'
+import FileUploader from '../components/upload/FileUploader'
 
-type Props = {}
 
-const UploadPage = (props: Props) => {
+const UploadPage = () => {
   return (
-    <div>UploadPage</div>
+    <main>
+      <Title title="Upload pdf" />
+    
+      <FileUploader/>
+    </main>
   )
 }
 
