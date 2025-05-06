@@ -24,7 +24,7 @@ const PdfViewer = ({ file, pdfDetails }: Props) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [_, setPageWidth] = useState(window.innerWidth)
-  const { state, dispatch } = usePdfFiles()
+  const { dispatch } = usePdfFiles()
 
   useEffect(() => {
     const handleResize = () => {
@@ -123,11 +123,13 @@ const PdfViewer = ({ file, pdfDetails }: Props) => {
             pdfFileId: res.data.updatedFile._id
           }
         })
+        toast('File updated')
         console.log(res)
         return
       }
       const res = await axiosInstance.post('/', formData, {})
       dispatch({ type: 'ADD', payload: res.data.newPdfFile })
+      toast('New file created')
       console.log(res)
     } catch (error) {
       console.log(error)
