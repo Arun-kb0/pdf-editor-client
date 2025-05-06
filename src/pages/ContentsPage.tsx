@@ -42,7 +42,8 @@ const ContentsPage = () => {
         <PdfViewer
           file={file}
           pdfDetails={pdfFileDetails}
-        />}
+        />
+      }
 
     </main>
   )

@@ -1,20 +1,27 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import Title from "../components/Title"
 import PdfCard from "../components/home/PdfCard"
 import { axiosInstance } from "../config/axiosInstance"
-import { PdfFileType } from "../constants/types"
+import { usePdfFiles } from "../context/PdfFilesContext"
+import { Button } from "@material-tailwind/react"
 
-type Props = {}
 
-const HomePage = (props: Props) => {
-  const [pdfFiles, setPdfFiles] = useState<PdfFileType[]>([])
+const HomePage = () => {
+  const { state: { currentPage, numberOfPages, pdfFiles }, dispatch } = usePdfFiles()
 
   useEffect(() => {
+    if (currentPage !== 1) return
     (async () => {
-      const res = await axiosInstance.get(`/?page=${1}`)
-      setPdfFiles(res.data.pdfFiles)
+      const res = await axiosInstance.get(`/?page=${currentPage}`)
+      dispatch({ type: "SET", payload: res.data })
     })()
   }, [])
+
+  const loadMore = async () => {
+    if (currentPage > numberOfPages) return
+    const res = await axiosInstance.get(`/?page=${currentPage + 1}`)
+    dispatch({ type: "SET", payload: res.data })
+  }
 
   return (
     <main >
@@ -22,9 +29,23 @@ const HomePage = (props: Props) => {
 
       <section className="flex justify-center flex-wrap gap-4">
         {pdfFiles.map((item) => (
-          <PdfCard file={item} />
+          <PdfCard
+            key={item._id}
+            file={item}
+          />
         ))}
       </section>
+
+      <div className="flex justify-center items-center">
+        {
+          <Button
+            onClick={loadMore}
+            disabled={currentPage > numberOfPages}
+          >
+            Load more
+          </Button>
+        }
+      </div>
 
     </main>
   )
