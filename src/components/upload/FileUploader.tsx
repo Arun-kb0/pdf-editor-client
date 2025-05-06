@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router';
 import { CloudArrowUpIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react';
 
-
 type FormValues = {
   fileList: FileList;
 };
@@ -19,9 +18,9 @@ const FileUploader = () => {
   } = useForm<FormValues>()
   const fileList = watch('fileList') as FileList | undefined;
 
-  const handleFormSubmit = (data: FormValues) => {
+  const handleFormSubmit = async (data: FormValues) => {
     const file = data.fileList?.[0]
-    navigation('/contents', { state: { file } })
+    navigation('/contents', { state: { file, isDbStored: false } })
   }
 
   return (
