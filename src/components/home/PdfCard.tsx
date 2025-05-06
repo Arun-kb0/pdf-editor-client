@@ -4,6 +4,7 @@ import { PdfFileType } from '../../constants/types'
 import { Button, IconButton } from '@material-tailwind/react'
 import { usePdfFiles } from '../../context/PdfFilesContext'
 import { axiosInstance } from '../../config/axiosInstance'
+import { toast } from 'react-toastify'
 
 type Props = {
   file: PdfFileType
@@ -22,6 +23,7 @@ const PdfCard = ({ file }: Props) => {
   const handleDelete = async () => {
     await axiosInstance.delete(`/${file._id}`)
     dispatch({ type: 'DELETE', payload: { pdfFileId: file._id } })
+    toast('File deleted')
   }
 
   return (
