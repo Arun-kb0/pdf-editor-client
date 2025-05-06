@@ -1,11 +1,24 @@
+import { useEffect, useState } from "react"
+import PdfViewer from "../components/home/PdfViewer"
+import Title from "../components/Title"
+import { useLocation } from "react-router"
 
-type Props = {}
 
-const ContentsPage = (props: Props) => {
+const ContentsPage = () => {
+  const location = useLocation()
+  const [file, setFile] = useState<File | null>(null)
+
+  useEffect(() => {
+   setFile(location.state.file)
+  },[])
+
   return (
-    <div>
+    <main>
+      <Title title="Contents" />
 
-    </div>
+      {file && <PdfViewer file={file} />}
+
+    </main>
   )
 }
 

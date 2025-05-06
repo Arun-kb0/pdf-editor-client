@@ -56,11 +56,10 @@ const NavigationBar = () => {
         </Typography>
         <div className="mr-4 hidden lg:block">{navList}</div>
         <Button
-          variant="gradient"
+          variant="outline"
           size="sm"
           className="hidden lg:inline-block"
         >
-          <span>Get started</span>
         </Button>
         <IconButton
           className="lg:hidden"

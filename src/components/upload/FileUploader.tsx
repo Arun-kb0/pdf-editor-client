@@ -1,5 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
+import { CloudArrowUpIcon } from '@heroicons/react/24/solid'
+import { useState } from 'react';
+
 
 type FormValues = {
   fileList: FileList;
@@ -11,14 +14,14 @@ const FileUploader = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<FormValues>()
+  const fileList = watch('fileList') as FileList | undefined;
 
   const handleFormSubmit = (data: FormValues) => {
     const file = data.fileList?.[0]
-    console.log('File:', file)
-    localStorage.setItem('pdfFile', JSON.stringify(file))
-    navigation('/contents')
+    navigation('/contents', { state: { file } })
   }
 
   return (
@@ -31,26 +34,23 @@ const FileUploader = () => {
               className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-800 bg-gray-700 border-gray-600 hover:border-gray-500"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <svg
-                  className="w-8 h-8 mb-4 text-gray-400"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 20 16"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                  />
-                </svg>
-                <p className="mb-2 text-sm text-gray-100">
-                  <span className="font-semibold">Click to select</span> or drag and
-                  drop
-                </p>
-                <p className="text-xs text-gray-100">PDF only</p>
+                <CloudArrowUpIcon className="w-16 h-16 mb-4 text-gray-400" />
+                {fileList
+                  ? (
+                    <p className="mb-2 text-sm text-gray-100 flex flex-col">
+                      <span className="font-semibold">Selected file</span>
+                      <span>{fileList.length > 0 ? fileList[0].name : ''}</span>
+                    </p>
+                  ) : (
+                    <>
+                      <p className="mb-2 text-sm text-gray-100">
+                        <span className="font-semibold">Click to select</span> or drag and
+                        drop
+                      </p>
+                      <p className="text-xs text-gray-100">PDF only</p>
+                    </>
+                  )
+                }
               </div>
               <input
                 id="dropzone-file"
